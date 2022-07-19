@@ -1,3 +1,4 @@
+
 module.exports = (sequelize, DataType) => {
     const Actor = sequelize.define("Actor", {
         id: {
@@ -23,8 +24,9 @@ module.exports = (sequelize, DataType) => {
     })
     Actor.associate = (listaDeModelos) => {
         // Ator tem um filme favorito;
-        Actor.belongsTo(listaDeModelos.Movie, {
-            foreignKey: "favorite_movie_id",
+        Actor.hasOne(listaDeModelos.Movie, {
+            foreignKey: "id",
+            sourceKey: "favoriteMovieId",
             as: "favoriteMovie"
         }),
         // Um ator pode pertencer de vários filmes;

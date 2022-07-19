@@ -1,6 +1,6 @@
-// const db = require('../../models/movie') - Para quando queremos usar os métodos: Create, Update, Delete.
+const { Movie } = require('../src/database/models');
+const { Actor } = require('../src/database/models');
 
-const { Movie } = require('../index');
 const { Op } = require('sequelize');
 const db = require('../index');
 
@@ -71,3 +71,33 @@ db.Moive.Update ({
 db.Movie.Destroy({
   // where: {id: 10}
 })
+
+// Testando as associações:
+
+async function getActor(id) {
+  const actor = await Actor.findByPk(id, {
+    include: ['favoriteMovie']
+  })
+   console.log(`
+   ID: ${actor.id},
+   Nome: ${actor.fistName} ${actor.lastName}
+   FavoriteMovieID: ${actor.favoriteMovieId}
+   MovieTitle: ${(actor.favoriteMovie ? actor.favoriteMovie.title : "Filme não encontrado")}
+   `)
+}
+
+// getActor(1)
+
+async function getOneMovie(id) {
+  const movie = await Movie.findByPk(id, { include: 'genre'});
+  if (!movie) {
+      throw new Error('Movie not found');
+  }
+  console.log(`
+      Title: ${movie.title}
+      Genre: ${movie.genre.name}
+  `);
+  return movie;
+}
+
+getOneMovie(2)
